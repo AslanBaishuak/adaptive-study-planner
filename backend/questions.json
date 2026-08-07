@@ -1,0 +1,17 @@
+[
+  {"id": "m1", "topic": "math", "text": "What is 12 + 27?", "choices": ["39", "37", "41", "35"], "answer_index": 0, "difficulty": 900},
+  {"id": "m2", "topic": "math", "text": "Solve for x: 3x - 5 = 16", "choices": ["5", "7", "9", "6"], "answer_index": 1, "difficulty": 1050},
+  {"id": "m3", "topic": "math", "text": "What is the area of a circle with radius 4? (use \u03c0 \u2248 3.14)", "choices": ["25.12", "50.24", "12.56", "100.48"], "answer_index": 1, "difficulty": 1150},
+  {"id": "m4", "topic": "math", "text": "If f(x) = 2x^2 - 3, what is f(3)?", "choices": ["15", "12", "9", "18"], "answer_index": 0, "difficulty": 1250},
+  {"id": "m5", "topic": "math", "text": "What is the sum of the interior angles of a hexagon?", "choices": ["540\u00b0", "720\u00b0", "900\u00b0", "1080\u00b0"], "answer_index": 1, "difficulty": 1300},
+  {"id": "m6", "topic": "math", "text": "Simplify: (x^2 - 9) / (x - 3)", "choices": ["x - 3", "x + 3", "x^2 - 3", "x + 9"], "answer_index": 1, "difficulty": 1350},
+  {"id": "m7", "topic": "math", "text": "What is the derivative of 3x^2 + 2x?", "choices": ["6x + 2", "3x + 2", "6x", "x^2 + 2x"], "answer_index": 0, "difficulty": 1500},
+  {"id": "m8", "topic": "math", "text": "How many ways can 5 people be seated in a row?", "choices": ["60", "100", "120", "125"], "answer_index": 2, "difficulty": 1450},
+  {"id": "v1", "topic": "vocab", "text": "Which word means 'showing great enthusiasm'?", "choices": ["Apathetic", "Fervent", "Placid", "Reticent"], "answer_index": 1, "difficulty": 950},
+  {"id": "v2", "topic": "vocab", "text": "Which word means 'to make less severe'?", "choices": ["Exacerbate", "Mitigate", "Aggravate", "Amplify"], "answer_index": 1, "difficulty": 1100},
+  {"id": "v3", "topic": "vocab", "text": "'Ubiquitous' most nearly means:", "choices": ["Rare", "Present everywhere", "Ancient", "Hidden"], "answer_index": 1, "difficulty": 1200},
+  {"id": "v4", "topic": "vocab", "text": "'Ephemeral' most nearly means:", "choices": ["Everlasting", "Short-lived", "Massive", "Predictable"], "answer_index": 1, "difficulty": 1300},
+  {"id": "v5", "topic": "vocab", "text": "'Loquacious' describes someone who is:", "choices": ["Shy", "Talkative", "Angry", "Tired"], "answer_index": 1, "difficulty": 1350},
+  {"id": "v6", "topic": "vocab", "text": "'Obfuscate' most nearly means:", "choices": ["Clarify", "Confuse", "Simplify", "Reveal"], "answer_index": 1, "difficulty": 1450},
+  {"id": "v7", "topic": "vocab", "text": "'Sycophant' refers to someone who is:", "choices": ["A flatterer seeking favor", "A skilled leader", "A silent observer", "A harsh critic"], "answer_index": 0, "difficulty": 1500}
+]
