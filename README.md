@@ -1,67 +1,140 @@
 # Adaptive Study Planner
 
-A personalized quiz engine that adjusts question difficulty in real time
-based on performance — the same core idea behind adaptive exam-prep
-systems, implemented from scratch with a small Elo-rating algorithm.
+A local-first learning app that turns quiz performance into a real adaptive study plan. It selects questions near the learner's current skill level, tracks per-topic mastery, queues missed questions for review, persists progress, and builds a personalized seven-day schedule.
 
-## Why I built this
+The complete planner works without an AI API. Groq is optional and is called only when the learner deliberately asks for deeper tutoring or coaching.
 
-At my internship at Outpeer AI I help build and curate datasets that feed
-into an AI system for personalized entrance-exam prep. I wanted to
-understand — and build myself — the piece that actually *uses* that kind
-of data: an engine that tracks a learner's skill level and serves them
-questions right at the edge of what they can do, instead of a static quiz.
+## What makes it adaptive
 
-## How it works
+- **Elo-based difficulty matching:** learner and question ratings update after every answer.
+- **Per-topic skill ratings:** math, vocabulary, science, and programming adapt independently.
+- **Evidence-based mastery:** difficulty, accuracy, and number of attempts contribute to each topic's mastery score.
+- **Weak-topic prioritization:** smart-mix practice and the weekly plan favor topics with the lowest demonstrated mastery.
+- **Spaced review queue:** the latest missed questions remain visible for targeted review.
+- **Persistent progress:** learner history survives backend restarts in a local JSON file.
+- **Adaptive schedule:** users can generate 5–14 day plans for 10–90 minutes per day without using AI tokens.
+- **Optional AI tutor:** one bounded Groq call happens only when the learner presses an AI button.
 
-Both the learner and every question have a numeric rating (starting at
-1200, same convention as chess Elo). After each answer:
+## Zero-cost architecture
 
-- If the learner answers correctly, their rating moves up — more if the
-  question was hard relative to their rating, less if it was easy (an easy
-  win barely moves the needle).
-- If they answer incorrectly, their rating moves down, and the question's
-  own difficulty rating adjusts slightly too — so mis-calibrated questions
-  self-correct over time.
-- The next question served is always the closest match to the learner's
-  *current* rating, so difficulty tracks skill automatically.
+| Feature | Implementation | AI tokens |
+|---|---|---:|
+| Question selection | Local Python Elo engine | 0 |
+| Answer checking | Local question bank | 0 |
+| Explanations | Curated local explanations | 0 |
+| Topic mastery | Local deterministic calculation | 0 |
+| Review queue | Local learner history | 0 |
+| Weekly study plan | Local deterministic planner | 0 |
+| Deeper explanation | Optional Groq button | One request |
+| AI coaching | Optional Groq button | One request |
 
-The rating math lives entirely in [`backend/adaptive_engine.py`](backend/adaptive_engine.py)
-and is unit-testable independent of the API or UI.
+There are no automatic AI calls, background retries, or paid services required by the core application.
 
 ## Project structure
 
-```
+```text
 adaptive-study-planner/
+├── .env.example
+├── .gitignore
 ├── backend/
-│   ├── app.py              # Flask API (3 endpoints: next, answer, progress)
-│   ├── adaptive_engine.py  # Elo-based adaptive difficulty logic
-│   ├── questions.json      # Sample question bank (math + vocab)
-│   └── requirements.txt
+│   ├── app.py
+│   ├── adaptive_engine.py
+│   ├── questions.json
+│   ├── requirements.txt
+│   └── tests/
+│       └── test_adaptive_engine.py
 └── frontend/
+    ├── package.json
+    ├── package-lock.json
+    ├── vite.config.js
     ├── index.html
-    ├── style.css
-    └── script.js            # Talks to the API with fetch()
+    └── src/
+        ├── App.jsx
+        ├── api.js
+        ├── main.jsx
+        ├── styles.css
+        └── components/
 ```
 
-## Run it locally
+Runtime learner data is created at `backend/data/learner_state.json` and is ignored by Git.
 
-```bash
-# 1. Backend
+## Run locally on Windows
+
+From the project root:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r .\backend\requirements.txt
+```
+
+Start the backend in the first terminal:
+
+```powershell
 cd backend
-pip install -r requirements.txt
-python app.py          # runs at http://localhost:5000
-
-# 2. Frontend (in a second terminal / just open the file)
-cd ../frontend
-open index.html        # or double-click it
+python app.py
 ```
 
-The frontend is a static page that calls the local API — no build step.
+Start the React frontend in a second terminal:
 
-## Possible extensions
+```powershell
+cd frontend
+npm install
+npm run dev
+```
 
-- Swap the in-memory stores in `AdaptiveEngine` for a real database
-- Add real user accounts instead of a single "guest" user
-- Chart rating-over-time using the `/api/progress` history
-- Expand the question bank and add per-topic ratings instead of one global rating
+Open `http://localhost:5173`. Vite proxies `/api` requests to the Flask backend at `http://localhost:5000`, so no additional configuration is needed for local development.
+
+## Enable optional Groq tutoring
+
+The adaptive planner does not need Groq. To enable the two optional AI buttons, create a free Groq key and set it only in the current terminal:
+
+```powershell
+$env:GROQ_API_KEY="your-new-key"
+$env:GROQ_MODEL="llama-3.1-8b-instant"
+python app.py
+```
+
+Never paste a real API key into `app.py`, frontend code, `.env.example`, README files, Git commits, or screenshots.
+
+## API overview
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/api/health` | Backend and optional-AI status |
+| GET | `/api/topics` | Available topics and question counts |
+| GET | `/api/next` | Select the next adaptive question |
+| POST | `/api/answer` | Check an answer and update ratings |
+| GET | `/api/progress` | Mastery, accuracy, streaks, and review queue |
+| GET | `/api/study-plan` | Generate a local adaptive schedule |
+| GET | `/api/recommendation` | Get a local zero-token recommendation |
+| POST | `/api/explain` | Request one optional Groq explanation |
+| POST | `/api/coach` | Request one optional Groq coaching response |
+| POST | `/api/reset` | Reset one learner's local progress |
+
+## Run tests
+
+Backend validation:
+
+```powershell
+cd backend
+python -m unittest discover -s tests -v
+python -m py_compile app.py adaptive_engine.py
+```
+
+Frontend validation:
+
+```powershell
+cd frontend
+npm install
+npm run build
+```
+
+The automated suite covers rating direction, persistence, review queues, plan generation, and practice-cycle behavior. The Vite build verifies the React component tree and production bundle.
+
+## Current limitations
+
+- The demo uses a local learner ID rather than full authentication.
+- JSON persistence is designed for a local portfolio demo, not concurrent production traffic.
+- The built-in question bank is intentionally compact. A production version should use a database and a larger reviewed item bank.
+- AI output can be wrong; curated local explanations remain the default source of truth.

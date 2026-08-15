@@ -1,44 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Adaptive Study Planner</title>
-<link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="app">
-    <header>
-      <h1>Adaptive Study Planner</h1>
-      <p class="subtitle">Questions get harder or easier based on how you're doing — powered by a small Elo-rating engine.</p>
-    </header>
-
-    <section class="stats">
-      <div class="stat">
-        <span class="stat-label">Your Rating</span>
-        <span id="rating" class="stat-value">1200</span>
-      </div>
-      <div class="stat">
-        <span class="stat-label">Answered</span>
-        <span id="answered-count" class="stat-value">0</span>
-      </div>
-      <div class="topic-select">
-        <label for="topic">Topic</label>
-        <select id="topic">
-          <option value="">All</option>
-          <option value="math">Math</option>
-          <option value="vocab">Vocabulary</option>
-        </select>
-      </div>
-    </section>
-
-    <section id="question-card" class="question-card">
-      <p class="loading">Loading your first question…</p>
-    </section>
-
-    <p id="feedback" class="feedback"></p>
-  </div>
-
-  <script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A local-first adaptive study planner with per-topic mastery, spaced review, and optional AI tutoring." />
+    <title>Adaptive Study Planner</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
