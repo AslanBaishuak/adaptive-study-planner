@@ -11,7 +11,7 @@ from adaptive_engine import AdaptiveEngine
 
 BASE_DIR = Path(__file__).parent
 QUESTIONS_PATH = BASE_DIR / "questions.json"
-STATE_PATH = BASE_DIR / "tmp" / "learner_state.json"
+STATE_PATH = Path("/tmp/learner_state.json")
 DEFAULT_USER = "guest"
 AI_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 
